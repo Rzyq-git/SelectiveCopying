@@ -1,2 +1,2 @@
 # SelectiveCopying
-Script em python para fazer copia de arquivo com uma determinada extensão de uma pasta e cola-la em outra e renomeando esse arquivos de forma numérica e crescente
+Script que será executado juntamente ao software NanoDlp(um software para impressoras 3d do tipo SLA/SLS/DLP), ele é responsavel por acessar todas as pastas dos modelos que serão impressos e duplica os arquivos necessários para impressão com uma determinada extensão e nomea-los de forma numérica e sequencial, ele faz isso para que a mesma camada de impressão seja feita duas vezes, esse script é opcional para ser executado pelo software NanoDlp, e caso um modelo ja tenha sido executado esse script, ele não se repetirá, apenas para os modelos que não foram duplicados.
