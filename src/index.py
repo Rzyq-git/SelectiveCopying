@@ -1,9 +1,11 @@
 import shutil, os, json
 
+# Adcionar um novo registro ao JSON
 def escreverJson(data, arquivo):
     with open(arquivo, "w") as f:
         json.dump(data, f, indent=4);
 
+# Renomear todos os arquivos para que posteriormente possa renomear novamente na ordem correta
 def renomear(caminho, extensao):
    i = 1;
    for filename in os.listdir(caminho):
@@ -14,6 +16,8 @@ def renomear(caminho, extensao):
          os.rename(meu_caminho, meu_dest);
          i += 1;
 
+# Renoameando os arquivos de forma correta, numéricamente.
+# exemplo: 1, 2, 3, 4... o dois sendo cópia do um e assim sucessivamente 
 def renomearCopias(caminho, extensao):
    i = 1;
    for filename in os.listdir(caminho):
@@ -24,43 +28,53 @@ def renomearCopias(caminho, extensao):
          os.rename(meu_caminho, meu_dest);
          i += 1;
 
+# arquivo onde será armazenado o registro da pasta em que seus arquivos ja foram duplicados
 arquivo = "data.json";
+# a extensão dos arquivos que serão copiados na pasta
 extensao = ".png";
 #alterar de acordo com a pasta que quiser
-caminho = "C:/Users/kldbr/Desktop/new_test/";
+caminho = "C:/Users/Lucas/Desktop/pasta_teste/";
+# armazenando todas as pastas do caminho escolhido
 pastas = os.listdir(caminho);
 pastas.sort(key = int);
-ultimaPosicao = len(pastas) - 1;
 
+#  abrindo o arquivo com os registros e armazenando em uma variavel
 with open(arquivo, 'r') as openfile:
-   json_object = json.load(openfile);
+   json_data = json.load(openfile);
 
-nei = []
-for obj in json_object['pastas']:
+# array onde sera armazenado os nomes das pastas que estão no diretório escolhido e esta no registro do JSON
+pasta_obj = []
+for obj in json_data['pastas']:
    if obj['pasta'] in pastas:
-      nei.append(obj['pasta'])
+      pasta_obj.append(obj['pasta'])
 
+pasta_obj.sort(key = int)
+
+# substituindo os registros no JSON para apenas as pastas onde ja foram duplicadas e que elas estejam correspondentes ao diretório em que estão
 assoc = dict()
 assoc["pastas"] = []
-for pi in nei:
-   y = {"pasta": pi}
+for i in pasta_obj:
+   y = {"pasta": i}
    assoc["pastas"].append(y);
 
 
 with open(arquivo, "w") as f:
    json.dump(assoc, f, indent=4);
 
+#abrindo novamente o json e armazenando seus registros em um array
 with open(arquivo, 'r') as openfile:
-   json_object2 = json.load(openfile);
+   json_data2 = json.load(openfile);
 
-
+#array com o nome das pastas do JSON
 i = 0
 pastasJson = []
-for item in json_object2['pastas']:
+for item in json_data2['pastas']:
    pastasJson.append(item["pasta"])
    i += 1
 
 pastasJson.sort(key = int);
+
+#array que será armazenado as pastas que ainda não foram duplicadas
 diferente = [];
 for item in pastas:
    if item not in pastasJson:
@@ -68,7 +82,7 @@ for item in pastas:
 
 diferente.sort(key = int);
 
-
+#loop para duplicar os arquivos que estão dentro das pastas ainda não duplicadas e renomeando corretamente e depois registrando no json
 for item in diferente:
    caminhoFinal = caminho + item + "/";
    i = 1
@@ -76,7 +90,6 @@ for item in diferente:
       for filename in filenames:
          if filename.endswith(format(extensao)):
                         shutil.copy(os.path.join(folders, filename), os.path.join(folders, "" + str(i) + "_copia" + extensao))
-                        print("deu certo")
                         i += 1
    if __name__ == '__main__':
       renomear(caminhoFinal, extensao);
@@ -87,3 +100,4 @@ for item in diferente:
       y = {"pasta": item};
       temp.append(y);
    escreverJson(data, arquivo);
+   print("Deu ceeeeeeeeeeerto")
